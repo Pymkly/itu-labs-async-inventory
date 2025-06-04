@@ -1,0 +1,25 @@
+# docker-compose.yml
+
+version: '3.8' # Spécifie la version de la syntaxe Docker Compose. '3.8' est une bonne version moderne.
+
+services:
+  db: # C'est le nom de votre service de base de données. Vous y ferez référence par ce nom dans votre application.
+    image: postgres:16-alpine # Utilise l'image officielle de PostgreSQL (version 16, alpine pour la légèreté)
+    container_name: itu-labs-async-inventory # Nom explicite pour le conteneur Docker créé par ce service
+    restart: unless-stopped # Redémarre le conteneur à moins qu'il ne soit explicitement arrêté
+
+    environment: # Variables d'environnement pour configurer PostgreSQL
+      POSTGRES_DB: itu-labs-async-inventory          # Nom de la base de données
+      POSTGRES_USER: itulabs            # Nom d'utilisateur
+      POSTGRES_PASSWORD: t3yC0mpt31nL1h!   # Mot de passe (À CHANGER POUR LA PRODUCTION !)
+                                      # Pour la production, utilisez un fichier .env (voir ci-dessous)
+
+    ports: # Mappage des ports : "port_hôte:port_conteneur"
+      - "5432:5432" # Expose le port 5432 du conteneur au port 5432 de l'hôte
+
+    volumes: # Gestion des volumes pour la persistance des données
+      - db_data:/var/lib/postgresql/data # Mappe le volume nommé 'db_data' au chemin des données de PostgreSQL dans le conteneur
+
+volumes: # Définition des volumes nommés utilisés par les services
+  db_data: # Nom du volume. Docker le gérera pour vous.
+    driver: local # Utilise le pilote de volume local par défaut.
